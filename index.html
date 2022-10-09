@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://kit.fontawesome.com/c715dd7864.js" crossorigin="anonymous"></script>
+    <script src="./script.js" defer></script>
+</head>
+
+<body>
+    <main class="main">
+        <div class="weather__info">
+            <div class="weather__description"></div>
+            <div class="weather__city"></div>
+            <div class="weather__date"></div>
+            <div class="weather__time"></div>
+            <div class="weather__temperature"></div>
+            <div class="weather__unit-c">Display °C</div>
+            <div class="weather__unit-f">Display °F</div>
+            <div class="weather__icon"><i class="fa-solid fa-cloud"></i></div>
+            <div class="weather__search-city">
+                <input type="text" placeholder="Search location..." class="search__box">
+                <div class="search__icon"><i class="fa-solid fa-magnifying-glass"></i></div>
+            </div>
+            <div class="error__msg">
+                <p>Location not found.</p>
+                <p>Search must be in the form of "City", "City, State" or "City, Country".</p>
+            </div>
+        </div>
+        <div class="weather__details-container">
+            <div class="weather__details">
+                <div class="weather__details-icon">
+                    <i class="fa-solid fa-temperature-three-quarters"></i>
+                </div>
+                <div class="weather__details-info">
+                    <div class="info__header">Feels Like</div>
+                    <div class="info__data" id="feels-like"></div>
+                </div>
+            </div>
+            <div class="weather__details">
+                <div class="weather__details-icon">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <div class="weather__details-info">
+                    <div class="info__header">Humidity</div>
+                    <div class="info__data" id="humidity"></div>
+                </div>
+            </div>
+            <div class="weather__details">
+                <div class="weather__details-icon">
+                    <i class="fa-solid fa-cloud-rain"></i>
+                </div>
+                <div class="weather__details-info">
+                    <div class="info__header">Chance of Rain</div>
+                    <div class="info__data" id="chance-of-rain">0 %</div>
+                </div>
+            </div>
+            <div class="weather__details">
+                <div class="weather__details-icon">
+                    <i class="fa-solid fa-wind"></i>
+                </div>
+                <div class="weather__details-info">
+                    <div class="info__header">Wind Speed</div>
+                    <div class="info__data" id="wind-speed"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <section class="forecast"></section>
+</body>
+
+</html>
