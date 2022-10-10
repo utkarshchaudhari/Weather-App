@@ -11,10 +11,14 @@ body {
     background-image: url(./images/sky.jpg);
     background-attachment: fixed;
     background-size: cover;
+    min-height: 100vh;
     max-width: 1200px;
     margin: 0 auto;
-    padding-top: 48px;
+    padding: 24px;
     color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .main {
@@ -101,4 +105,49 @@ input[type='text'] {
 
 .info__data {
     font-size: 20px;
+}
+
+.forecast__buttons {
+    display: flex;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.btn {
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 16px;
+    padding: 4px 10px;
+}
+
+.active__btn {
+    border: 2px solid #fff;
+    border-radius: 4px;
+}
+
+.daily__forecast-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.daily__forecast {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.day {
+    font-size: 20px;
+    margin-bottom: 16px;
+}
+
+.temperature__high {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.daily__forecast-icon {
+    margin-top: 12px;
+    font-size: 32px;
 }

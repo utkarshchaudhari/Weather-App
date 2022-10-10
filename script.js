@@ -7,7 +7,9 @@ async function searchWeather(city) {
     const cityData = await (await fetch(url)).json();
     console.log(cityData);
     if (cityData.cod === 200) {
-        
+        const weekurl = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.coord.lat}&lon=${cityData.coord.lon}&exclude=minutely,alerts&appid=20f7632ffc2c022654e4093c6947b4f4`;
+        const weekData = await (await fetch(weekurl)).json();
+        console.log(weekData);
         const d = new Date();
         const utcTime = (d.getTimezoneOffset() * 60000) + d.getTime();
         const time = utcTime + (cityData.timezone * 1000);
@@ -19,10 +21,42 @@ async function searchWeather(city) {
         document.querySelector('.weather__time').textContent = weatherTime(date);
         document.querySelector('.weather__temperature').textContent = getFahrenheit(cityData.main.temp);
 
-        document.getElementById('humidity').textContent = `${cityData.main.humidity} %`;
         document.getElementById('feels-like').textContent = getFahrenheit(cityData.main.feels_like);
+        document.getElementById('humidity').textContent = `${cityData.main.humidity} %`;
+        document.getElementById('chance-of-rain').textContent = `${weekData.daily[0].pop * 100} %`;
         document.getElementById('wind-speed').textContent = `${Math.round(cityData.wind.speed * 3.6 * 10) / 10} Km/h`;
+
+        dailyForecast(weekData);
     }
+}
+
+function dailyForecast(data) {
+    const days = document.querySelectorAll('.day');
+    const temperatureHigh = document.querySelectorAll('.temperature__high');
+    const temperatureLow = document.querySelectorAll('.temperature__low');
+
+    days.forEach((node, index) => {
+        const d = new Date(data.daily[index + 1].dt * 1000);
+        let day = d.toDateString().slice(0, 3);
+        if (day === 'Mon') {
+            day = 'Monday';
+        } else if (day === 'Tue') {
+            day = 'Tuesday';
+        } else if (day === 'Wed') {
+            day = 'Wednesday';
+        } else if (day === 'Thu') {
+            day = 'Thursday';
+        } else if (day === 'Fri') {
+            day = 'Friday';
+        } else if (day === 'Sat') {
+            day = 'Saturday';
+        } else if (day === 'Sun') {
+            day = 'Sunday';
+        }
+        node.textContent = day;
+    });
+    temperatureHigh.forEach((node, index) => node.textContent = getFahrenheit(data.daily[index + 1].temp.max));
+    temperatureLow.forEach((node, index) => node.textContent = getFahrenheit(data.daily[index + 1].temp.min));
 }
 
 function weatherDate(dateObj) {
