@@ -89,6 +89,10 @@ input[type='text'] {
     margin-top: 8px;
 }
 
+.active {
+    display: block;
+}
+
 .weather__details {
     display: flex;
     margin-bottom: 20px;

@@ -5,6 +5,8 @@ searchIcon.addEventListener('click', () => searchWeather(document.querySelector(
 async function searchWeather(city) {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=1fca3dc70103b44d8c105b5f052ac462`;
     const cityData = await (await fetch(url)).json();
+    document.querySelector('.search__box').value = '';
+    document.querySelector('.error__msg').classList.remove('active');
     console.log(cityData);
     if (cityData.cod === 200) {
         const weekurl = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.coord.lat}&lon=${cityData.coord.lon}&exclude=minutely,alerts&appid=20f7632ffc2c022654e4093c6947b4f4`;
@@ -27,6 +29,8 @@ async function searchWeather(city) {
         document.getElementById('wind-speed').textContent = `${Math.round(cityData.wind.speed * 3.6 * 10) / 10} Km/h`;
 
         dailyForecast(weekData);
+    } else {
+        document.querySelector('.error__msg').classList.add('active');
     }
 }
 
