@@ -4,6 +4,13 @@ const hourlyBtn = document.querySelector('.hourly__btn');
 const pageBtn = document.querySelector('.change__hours');
 const dailyData = document.querySelector('.daily__forecast-container');
 const hourlyData = document.querySelector('.hourly__forecast-container');
+const dot1 = document.getElementById('dot1');
+const dot2 = document.getElementById('dot2');
+const dot3 = document.getElementById('dot3');
+const leftBtn = document.querySelector('.left__btn');
+const rightBtn = document.querySelector('.right__btn');
+const hourlyPage = document.querySelectorAll('.hourly__forecast');
+let clickedDot = 1;
 
 searchIcon.addEventListener('click', () => searchWeather(document.querySelector('.search__box').value));
 dailyBtn.addEventListener('click', () => dailyWeather());
@@ -146,9 +153,57 @@ function hourlyWeather() {
     dailyBtn.classList.remove('active__btn');
     hourlyBtn.classList.add('active__btn');
     pageBtn.style.display = 'flex';
+    dotClicked(clickedDot);
     dailyData.style.display = 'none';
     hourlyData.style.display = 'flex';
 }
+
+dot1.addEventListener('click', () => dotClicked(1));
+dot2.addEventListener('click', () => dotClicked(2));
+dot3.addEventListener('click', () => dotClicked(3));
+leftBtn.addEventListener('click', () => dotClicked(clickedDot - 1));
+rightBtn.addEventListener('click', () => dotClicked(clickedDot + 1));
+
+function dotClicked(dot) {
+    if (dot === 1) {
+        clickedDot = 1;
+        dot1.innerHTML = '<i class="fa-solid fa-circle"></i>';
+        dot2.innerHTML = '<i class="fa-regular fa-circle"></i>';
+        dot3.innerHTML = '<i class="fa-regular fa-circle"></i>';
+        hourlyPage.forEach((node, index) => {
+            if (index > 7) {
+                node.style.display = 'none';
+            } else {
+                node.style.display = 'flex';
+            }
+        });
+    } else if (dot === 2) {
+        clickedDot = 2;
+        dot2.innerHTML = '<i class="fa-solid fa-circle"></i>';
+        dot1.innerHTML = '<i class="fa-regular fa-circle"></i>';
+        dot3.innerHTML = '<i class="fa-regular fa-circle"></i>';
+        hourlyPage.forEach((node, index) => {
+            if (index <= 7 || index > 15) {
+                node.style.display = 'none';
+            } else {
+                node.style.display = 'flex';
+            }
+        });
+    } else if (dot === 3) {
+        clickedDot = 3;
+        dot3.innerHTML = '<i class="fa-solid fa-circle"></i>';
+        dot2.innerHTML = '<i class="fa-regular fa-circle"></i>';
+        dot1.innerHTML = '<i class="fa-regular fa-circle"></i>';
+        hourlyPage.forEach((node, index) => {
+            if (index < 16) {
+                node.style.display = 'none';
+            } else {
+                node.style.display = 'flex';
+            }
+        });
+    }
+}
+
 
 searchWeather('london');
 
