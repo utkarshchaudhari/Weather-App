@@ -114,7 +114,7 @@ input[type='text'] {
 .forecast__buttons {
     display: flex;
     align-items: center;
-    margin-bottom: 24px;
+    margin: 24px 0;
 }
 
 .btn {
@@ -129,23 +129,35 @@ input[type='text'] {
     border-radius: 4px;
 }
 
+.change__hours{
+    cursor: pointer;
+    width: 72px;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dot{
+    font-size: 7px;
+}
+
 .daily__forecast-container {
     display: flex;
     justify-content: space-between;
 }
 
-.daily__forecast {
+.daily__forecast, .hourly__forecast {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
-.day {
+.day, .hourly__time {
     font-size: 20px;
     margin-bottom: 16px;
 }
 
-.temperature__high {
+.temperature__high, .hourly__temperature {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 4px;
@@ -154,4 +166,9 @@ input[type='text'] {
 .daily__forecast-icon {
     margin-top: 12px;
     font-size: 32px;
+}
+
+.hourly__forecast-container {
+    display: none;
+    justify-content: space-between;
 }

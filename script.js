@@ -1,6 +1,13 @@
 const searchIcon = document.querySelector('.search__icon');
+const dailyBtn = document.querySelector('.daily__btn');
+const hourlyBtn = document.querySelector('.hourly__btn');
+const pageBtn = document.querySelector('.change__hours');
+const dailyData = document.querySelector('.daily__forecast-container');
+const hourlyData = document.querySelector('.hourly__forecast-container');
 
 searchIcon.addEventListener('click', () => searchWeather(document.querySelector('.search__box').value));
+dailyBtn.addEventListener('click', () => dailyWeather());
+hourlyBtn.addEventListener('click', () => hourlyWeather());
 
 async function searchWeather(city) {
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=1fca3dc70103b44d8c105b5f052ac462`;
@@ -29,6 +36,7 @@ async function searchWeather(city) {
         document.getElementById('wind-speed').textContent = `${Math.round(cityData.wind.speed * 3.6 * 10) / 10} Km/h`;
 
         dailyForecast(weekData);
+        hourlyForecast(weekData);
     } else {
         document.querySelector('.error__msg').classList.add('active');
     }
@@ -63,6 +71,23 @@ function dailyForecast(data) {
     temperatureLow.forEach((node, index) => node.textContent = getFahrenheit(data.daily[index + 1].temp.min));
 }
 
+function hourlyForecast(data) {
+    const time = document.querySelectorAll('.hourly__time');
+    const temperature = document.querySelectorAll('.hourly__temperature');
+
+    time.forEach((node, index) => {
+        const d = new Date(data.hourly[index + 5].dt * 1000 + data.timezone_offset * 1000);
+        node.textContent = formatTime(d);
+    });
+    temperature.forEach((node, index) => node.textContent = getFahrenheit(data.hourly[index + 5].temp));
+}
+
+function formatTime(dateObj) {
+    const hours = dateObj.getHours();
+    if (hours === 0) return '12 am';
+    return (hours > 12) ? `${hours - 12} pm` : `${hours} am`;
+}
+
 function weatherDate(dateObj) {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
@@ -78,6 +103,7 @@ function weatherDate(dateObj) {
 function weatherTime(dateObj) {
     const hours = dateObj.getHours();
     const minutes = formatMin(dateObj.getMinutes());
+    if (hours === 0) return `12:${minutes} am`;
     return (hours > 12) ? `${hours - 12}:${minutes} pm` : `${hours}:${minutes} am`;
 }
 
@@ -106,6 +132,22 @@ function formatMin(m) {
 
 function getFahrenheit(k) {
     return `${Math.round((k - 273.15) * 9 / 5 + 32)} °F`;
+}
+
+function dailyWeather() {
+    hourlyBtn.classList.remove('active__btn');
+    pageBtn.style.display = 'none';
+    dailyBtn.classList.add('active__btn');
+    hourlyData.style.display = 'none';
+    dailyData.style.display = 'flex';
+}
+
+function hourlyWeather() {
+    dailyBtn.classList.remove('active__btn');
+    hourlyBtn.classList.add('active__btn');
+    pageBtn.style.display = 'flex';
+    dailyData.style.display = 'none';
+    hourlyData.style.display = 'flex';
 }
 
 searchWeather('london');
