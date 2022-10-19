@@ -36,6 +36,7 @@ async function searchWeather(city) {
         document.querySelector('.weather__date').textContent = weatherDate(date);
         document.querySelector('.weather__time').textContent = weatherTime(date);
         document.querySelector('.weather__temperature').textContent = getFahrenheit(cityData.main.temp);
+        document.querySelector('.weather__icon').innerHTML = getIcon(cityData.weather[0].icon);
 
         document.getElementById('feels-like').textContent = getFahrenheit(cityData.main.feels_like);
         document.getElementById('humidity').textContent = `${cityData.main.humidity} %`;
@@ -53,6 +54,7 @@ function dailyForecast(data) {
     const days = document.querySelectorAll('.day');
     const temperatureHigh = document.querySelectorAll('.temperature__high');
     const temperatureLow = document.querySelectorAll('.temperature__low');
+    const dailyIcons = document.querySelectorAll('.daily__icon');
 
     days.forEach((node, index) => {
         const d = new Date(data.daily[index + 1].dt * 1000);
@@ -76,17 +78,20 @@ function dailyForecast(data) {
     });
     temperatureHigh.forEach((node, index) => node.textContent = getFahrenheit(data.daily[index + 1].temp.max));
     temperatureLow.forEach((node, index) => node.textContent = getFahrenheit(data.daily[index + 1].temp.min));
+    dailyIcons.forEach((node, index) => node.innerHTML = getIcon(data.daily[index + 1].weather[0].icon));
 }
 
 function hourlyForecast(data) {
     const time = document.querySelectorAll('.hourly__time');
     const temperature = document.querySelectorAll('.hourly__temperature');
+    const hourlyIcons = document.querySelectorAll('.hourly__icon');
 
     time.forEach((node, index) => {
         const d = new Date(data.hourly[index + 5].dt * 1000 + data.timezone_offset * 1000);
         node.textContent = formatTime(d);
     });
     temperature.forEach((node, index) => node.textContent = getFahrenheit(data.hourly[index + 5].temp));
+    hourlyIcons.forEach((node, index) => node.innerHTML = getIcon(data.hourly[index + 5].weather[0].icon));
 }
 
 function formatTime(dateObj) {
@@ -204,8 +209,30 @@ function dotClicked(dot) {
     }
 }
 
+function getIcon(code) {
+    if (code === '01d') {
+        return '<i class="fa-solid fa-sun"></i>';
+    } else if (code === '01n') {
+        return '<i class="fa-solid fa-moon"></i>';
+    } else if (code === '02d') {
+        return '<i class="fa-solid fa-cloud-sun"></i>';
+    } else if (code === '02n') {
+        return '<i class="fa-solid fa-cloud-moon"></i>';
+    } else if (code === '03d' || code === '03n') {
+        return '<i class="fa-solid fa-cloud"></i>';
+    } else if (code === '04d' || code === '04n') {
+        return '<i class="fa-brands fa-cloudflare"></i>';
+    } else if (code === '09d' || code === '09n') {
+        return '<i class="fa-solid fa-cloud-showers-heavy"></i>';
+    } else if (code === '10d' || code === '10n') {
+        return '<i class="fa-solid fa-cloud-rain"></i>';
+    } else if (code === '11d' || code === '11n') {
+        return '<i class="fa-solid fa-cloud-bolt"></i>';
+    } else if (code === '13d' || code === '13n') {
+        return '<i class="fa-regular fa-snowflake"></i>';
+    } else if (code === '50d' || code === '50n') {
+        return '<i class="fa-solid fa-smog"></i>';
+    }
+}
 
 searchWeather('london');
-
-
-
