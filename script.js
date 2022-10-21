@@ -50,7 +50,7 @@ async function searchWeather(city, units=unit) {
         const time = utcTime + (cityData.timezone * 1000);
         const date = new Date(time);
 
-        document.querySelector('.weather__description').textContent = (cityData.weather[0].description);
+        document.querySelector('.weather__description').textContent = capitalize(cityData.weather[0].description);
         document.querySelector('.weather__city').textContent = cityData.name;
         document.querySelector('.weather__date').textContent = weatherDate(date);
         document.querySelector('.weather__time').textContent = weatherTime(date);
@@ -111,6 +111,10 @@ function hourlyForecast(data) {
     });
     temperature.forEach((node, index) => node.textContent = weatherUnit(data.hourly[index + 5].temp));
     hourlyIcons.forEach((node, index) => node.innerHTML = getIcon(data.hourly[index + 5].weather[0].icon));
+}
+
+function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 function formatTime(dateObj) {
