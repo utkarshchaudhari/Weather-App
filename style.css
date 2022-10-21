@@ -41,8 +41,8 @@ body {
     margin-top: 8px;
 }
 
-.weather__unit-f {
-    display: none;
+.weather__unit-c, .weather__unit-f {
+    cursor: pointer;
 }
 
 .weather__icon {
@@ -91,6 +91,10 @@ input[type='text'] {
 
 .active {
     display: block;
+}
+
+.inactive {
+    display: none;
 }
 
 .weather__details {

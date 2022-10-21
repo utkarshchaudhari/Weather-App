@@ -1,4 +1,6 @@
 const searchIcon = document.querySelector('.search__icon');
+const displayC = document.querySelector('.weather__unit-c');
+const displayF = document.querySelector('.weather__unit-f');
 const dailyBtn = document.querySelector('.daily__btn');
 const hourlyBtn = document.querySelector('.hourly__btn');
 const pageBtn = document.querySelector('.change__hours');
@@ -11,19 +13,36 @@ const leftBtn = document.querySelector('.left__btn');
 const rightBtn = document.querySelector('.right__btn');
 const hourlyPage = document.querySelectorAll('.hourly__forecast');
 let clickedDot = 1;
+let cityName = 'london';
+let unit = 'imperial';
 
-searchIcon.addEventListener('click', () => searchWeather(document.querySelector('.search__box').value));
+searchIcon.addEventListener('click', () => {
+    cityName = document.querySelector('.search__box').value;
+    searchWeather(cityName);
+});
+displayC.addEventListener('click', () => {
+    unit = 'metric';
+    displayC.classList.add('inactive');
+    displayF.classList.remove('inactive');
+    searchWeather(cityName);
+});
+displayF.addEventListener('click', () => {
+    unit = 'imperial';
+    displayF.classList.add('inactive');
+    displayC.classList.remove('inactive');
+    searchWeather(cityName);
+});
 dailyBtn.addEventListener('click', () => dailyWeather());
 hourlyBtn.addEventListener('click', () => hourlyWeather());
 
-async function searchWeather(city) {
-    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=1fca3dc70103b44d8c105b5f052ac462`;
+async function searchWeather(city, units=unit) {
+    const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${units}&APPID=1fca3dc70103b44d8c105b5f052ac462`;
     const cityData = await (await fetch(url)).json();
     document.querySelector('.search__box').value = '';
     document.querySelector('.error__msg').classList.remove('active');
     console.log(cityData);
     if (cityData.cod === 200) {
-        const weekurl = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.coord.lat}&lon=${cityData.coord.lon}&exclude=minutely,alerts&appid=20f7632ffc2c022654e4093c6947b4f4`;
+        const weekurl = `https://api.openweathermap.org/data/2.5/onecall?lat=${cityData.coord.lat}&lon=${cityData.coord.lon}&units=${units}&exclude=minutely,alerts&appid=20f7632ffc2c022654e4093c6947b4f4`;
         const weekData = await (await fetch(weekurl)).json();
         console.log(weekData);
         const d = new Date();
@@ -35,12 +54,12 @@ async function searchWeather(city) {
         document.querySelector('.weather__city').textContent = cityData.name;
         document.querySelector('.weather__date').textContent = weatherDate(date);
         document.querySelector('.weather__time').textContent = weatherTime(date);
-        document.querySelector('.weather__temperature').textContent = getFahrenheit(cityData.main.temp);
+        document.querySelector('.weather__temperature').textContent = weatherUnit(cityData.main.temp);
         document.querySelector('.weather__icon').innerHTML = getIcon(cityData.weather[0].icon);
 
-        document.getElementById('feels-like').textContent = getFahrenheit(cityData.main.feels_like);
+        document.getElementById('feels-like').textContent = weatherUnit(cityData.main.feels_like);
         document.getElementById('humidity').textContent = `${cityData.main.humidity} %`;
-        document.getElementById('chance-of-rain').textContent = `${weekData.daily[0].pop * 100} %`;
+        document.getElementById('chance-of-rain').textContent = `${Math.round(weekData.daily[0].pop * 100)} %`;
         document.getElementById('wind-speed').textContent = `${Math.round(cityData.wind.speed * 3.6 * 10) / 10} Km/h`;
 
         dailyForecast(weekData);
@@ -76,8 +95,8 @@ function dailyForecast(data) {
         }
         node.textContent = day;
     });
-    temperatureHigh.forEach((node, index) => node.textContent = getFahrenheit(data.daily[index + 1].temp.max));
-    temperatureLow.forEach((node, index) => node.textContent = getFahrenheit(data.daily[index + 1].temp.min));
+    temperatureHigh.forEach((node, index) => node.textContent = weatherUnit(data.daily[index + 1].temp.max));
+    temperatureLow.forEach((node, index) => node.textContent = weatherUnit(data.daily[index + 1].temp.min));
     dailyIcons.forEach((node, index) => node.innerHTML = getIcon(data.daily[index + 1].weather[0].icon));
 }
 
@@ -90,7 +109,7 @@ function hourlyForecast(data) {
         const d = new Date(data.hourly[index + 5].dt * 1000 + data.timezone_offset * 1000);
         node.textContent = formatTime(d);
     });
-    temperature.forEach((node, index) => node.textContent = getFahrenheit(data.hourly[index + 5].temp));
+    temperature.forEach((node, index) => node.textContent = weatherUnit(data.hourly[index + 5].temp));
     hourlyIcons.forEach((node, index) => node.innerHTML = getIcon(data.hourly[index + 5].weather[0].icon));
 }
 
@@ -142,8 +161,8 @@ function formatMin(m) {
     return (minutes.length === 1) ? `0${minutes}` : `${minutes}`;
 }
 
-function getFahrenheit(k) {
-    return `${Math.round((k - 273.15) * 9 / 5 + 32)} °F`;
+function weatherUnit(metric) {
+    return unit === 'imperial' ? `${Math.round(metric)} °F` : `${Math.round(metric)} °C`;
 }
 
 function dailyWeather() {
